@@ -4,9 +4,12 @@
 var NOMBRE_HOJA = 'Respuestas';
 var ENCABEZADOS = [
   'Fecha y hora',
+  'Nombre y apellido',
+  'Ubicación / localidad',
+  'Actividad mixta (extensiva / bajo riego)',
   '1. ¿Por qué hago lo que hago?',
-  '2. Mayor dificultad para producir',
-  '3. Motivo de productividad estancada',
+  '2. Dificultades para producir',
+  '3. Motivos de productividad estancada',
   '4. ¿La tecnología mejorará su productividad?',
   '5. Mesa de trabajo en la que participaría',
   '6. Otro tema a plantear',
@@ -40,10 +43,13 @@ function guardarRespuesta(d) {
     }
     hoja.appendRow([
       new Date(),
-      limpiar(d.p1, 200),
-      limpiar(d.p2, 200),
-      limpiar(d.p3, 200),
-      limpiar(d.p4, 200),
+      limpiar(d.nombre, 120),
+      limpiar(d.ubicacion, 200),
+      limpiar(d.mixta, 10),
+      limpiar(d.p1, 500),
+      limpiar(d.p2, 500),
+      limpiar(d.p3, 500),
+      limpiar(d.p4, 500),
       limpiar(d.mesa, 500),
       limpiar(d.tema, 1000),
       limpiar(d.p5, 1000),
