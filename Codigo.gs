@@ -16,7 +16,8 @@ var ENCABEZADOS = [
   '5. Mesa de trabajo en la que participaría',
   '6. Otro tema a plantear',
   '7. Una cuestión a resolver en 2026/27',
-  'Observaciones'
+  'Observaciones',
+  'Actividad en la cadena de carnes'
 ];
 
 // Sirve el formulario (la URL /exec es la que se comparte por WhatsApp)
@@ -42,6 +43,9 @@ function guardarRespuesta(d) {
       hoja.appendRow(ENCABEZADOS);
       hoja.getRange(1, 1, 1, ENCABEZADOS.length).setFontWeight('bold');
       hoja.setFrozenRows(1);
+    } else if (hoja.getLastColumn() < ENCABEZADOS.length) {
+      // Planilla con respuestas previas: agrega los encabezados de columnas nuevas
+      hoja.getRange(1, 1, 1, ENCABEZADOS.length).setValues([ENCABEZADOS]).setFontWeight('bold');
     }
     hoja.appendRow([
       new Date(),
@@ -55,7 +59,8 @@ function guardarRespuesta(d) {
       limpiar(d.mesa, 500),
       limpiar(d.tema, 1000),
       limpiar(d.p5, 1000),
-      limpiar(d.obs, 2000)
+      limpiar(d.obs, 2000),
+      limpiar(d.actividad, 300)
     ]);
   } finally {
     lock.releaseLock();

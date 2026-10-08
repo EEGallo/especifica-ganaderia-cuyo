@@ -66,6 +66,8 @@
     font-family: Georgia, "Times New Roman", serif; color: var(--navy);
     font-size: 20px; margin: 24px 0 12px; padding-bottom: 6px; border-bottom: 2px solid var(--gold);
   }
+  .otra-txt { display: none; margin-top: 8px; }
+  label.opt:has(input:checked) + .otra-txt { display: block; }
   .opt-tag { color: var(--muted); font-weight: 400; }
   input[type="text"], textarea {
     width: 100%; padding: 12px; font: inherit; color: var(--ink);
@@ -96,9 +98,10 @@
   <form id="f" novalidate>
     <h2 class="section">Datos del productor</h2>
 
-    <fieldset>
-      <legend>Nombre y apellido <span class="opt-tag">(opcional)</span></legend>
+    <fieldset data-req>
+      <legend>Nombre y apellido</legend>
       <input type="text" name="nombre" maxlength="120" autocomplete="name">
+      <div class="err-msg">Complete este campo.</div>
     </fieldset>
 
     <fieldset data-req>
@@ -112,6 +115,17 @@
       <label class="opt"><input type="radio" name="mixta" value="Sí">Sí</label>
       <label class="opt"><input type="radio" name="mixta" value="No">No</label>
       <div class="err-msg">Elija una opción.</div>
+    </fieldset>
+
+    <fieldset data-req>
+      <legend>¿Qué actividad realiza dentro de la cadena de carnes?</legend>
+      <span class="hint">PUEDE MARCAR MÁS DE UNA</span>
+      <label class="opt"><input type="checkbox" name="actividad" value="Cría">Cría</label>
+      <label class="opt"><input type="checkbox" name="actividad" value="Recría / engorde">Recría / engorde</label>
+      <label class="opt"><input type="checkbox" name="actividad" value="Faena / comercial">Faena / comercial</label>
+      <label class="opt"><input type="checkbox" name="actividad" value="Otra" data-otra>Otra</label>
+      <input type="text" class="otra-txt" name="actividad_otra" maxlength="200" placeholder="Especifique cuál">
+      <div class="err-msg">Marque al menos una opción y, si eligió "Otra", especifique cuál.</div>
     </fieldset>
 
     <h2 class="section">Cuestionario</h2>
@@ -211,7 +225,10 @@
     var firstBad = null;
     form.querySelectorAll('fieldset[data-req]').forEach(function (fs) {
       var txt = fs.querySelector('input[type="text"], textarea');
-      var ok = txt ? txt.value.trim() !== '' : fs.querySelector('input:checked');
+      var hasChoices = fs.querySelector('input[type="checkbox"], input[type="radio"]');
+      var ok = hasChoices ? !!fs.querySelector('input:checked') : txt.value.trim() !== '';
+      var otra = fs.querySelector('[data-otra]');
+      if (ok && otra && otra.checked) ok = txt.value.trim() !== '';
       fs.classList.toggle('invalid', !ok);
       if (!ok && !firstBad) firstBad = fs;
     });
@@ -219,6 +236,8 @@
 
     var data = {};
     new FormData(form).forEach(function (v, k) { data[k] = data[k] ? data[k] + '; ' + v : v; });
+    if (data.actividad) data.actividad = data.actividad.replace('Otra', 'Otra: ' + (data.actividad_otra || '').trim());
+    delete data.actividad_otra;
     btn.disabled = true; btn.textContent = 'Enviando…';
 
     function ok() { document.body.classList.add('done'); window.scrollTo(0, 0); }
