@@ -1,6 +1,8 @@
 // Cuestionario Ganadero – CCIA SR (9-10-2026)
-// Pegar este código en Extensiones > Apps Script de la hoja de cálculo de respuestas.
+// Pegar este código en el proyecto de Apps Script e implementarlo como aplicación web.
 
+// Hoja de cálculo donde se guardan las respuestas (ID tomado de su URL)
+var ID_PLANILLA = '1exwaCW3Y6Md3QBOY234wKyTezC0npmkkuG0E0Iz0UOQ';
 var NOMBRE_HOJA = 'Respuestas';
 var ENCABEZADOS = [
   'Fecha y hora',
@@ -34,7 +36,7 @@ function guardarRespuesta(d) {
   var lock = LockService.getScriptLock();
   lock.waitLock(15000);
   try {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var ss = SpreadsheetApp.openById(ID_PLANILLA);
     var hoja = ss.getSheetByName(NOMBRE_HOJA) || ss.insertSheet(NOMBRE_HOJA);
     if (hoja.getLastRow() === 0) {
       hoja.appendRow(ENCABEZADOS);
